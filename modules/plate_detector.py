@@ -4,21 +4,19 @@ from ultralytics import YOLO
 class PlateDetector:
 
     def __init__(self, model_path):
-        """
-        Load the license plate detection model.
-        """
+
         self.model = YOLO(model_path)
 
-    def detect(self, vehicle_image):
-        """
-        Detect license plate inside a cropped vehicle image.
+    def detect(self, image):
 
-        Returns:
-            YOLO Results
-        """
-        results = self.model(
-            vehicle_image,
+        if image is None or image.size == 0:
+            return None
+
+        return self.model.predict(
+            source=image,
+            conf=0.15,
+            iou=0.45,
+            imgsz=960,
+            max_det=10,
             verbose=False
         )[0]
-
-        return results
